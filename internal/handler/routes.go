@@ -6,28 +6,133 @@ package handler
 import (
 	"net/http"
 
-	keyword "tweetSentiments/internal/handler/keyword"
+	"tweetSentiments/internal/handler/influencer"
+	"tweetSentiments/internal/handler/keyword"
+	"tweetSentiments/internal/handler/sentiment"
+	"tweetSentiments/internal/handler/tweet"
 	"tweetSentiments/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )
 
+// RegisterHandlers 注册所有API路由（按领域分组，规范路径设计）
+// 路由前缀：/api/v1，统一API版本控制
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
+	// 全局路由配置：统一前缀、跨域（可选）、日志等
 	server.AddRoutes(
 		[]rest.Route{
+			// -------------------------- 1. 大V（Influencer）领域路由 --------------------------
 			{
-				// 添加领域情感关键词（如crypto相关的bullish、bearish）
+				Method:  http.MethodPost,
+				Path:    "/influencers",
+				Handler: influencer.CreateInfluencerHandler(serverCtx),
+				Desc:    "新增大V订阅（添加需要拉取推文的Twitter大V）",
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/influencers",
+				Handler: influencer.ListInfluencersHandler(serverCtx),
+				Desc:    "获取大V列表（支持分页、筛选活跃状态）",
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/influencers/:username",
+				Handler: influencer.GetInfluencerByUsernameHandler(serverCtx),
+				Desc:    "获取单个大V详情（通过用户名查询）",
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/influencers/:username",
+				Handler: influencer.UpdateInfluencerHandler(serverCtx),
+				Desc:    "更新大V配置（修改拉取频率、活跃状态等）",
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/influencers/:username",
+				Handler: influencer.DeleteInfluencerHandler(serverCtx),
+				Desc:    "取消大V订阅（软删除，停止拉取推文）",
+			},
+
+			// -------------------------- 2. 推文（Tweet）领域路由 --------------------------
+			{
+				Method:  http.MethodGet,
+				Path:    "/influencers/:username/tweets",
+				Handler: tweet.GetInfluencerTweetsHandler(serverCtx),
+				Desc:    "获取指定大V的推文列表（支持时间范围、分页）",
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/influencers/:username/tweets",
+				Handler: tweet.AddInfluencerTweetsHandler(serverCtx),
+				Desc:    "添加指定大V的推文列表（支持时间范围、分页）",
+			},
+
+			// -------------------------- 3. 情感关键词（Keyword）领域路由 --------------------------
+			{
 				Method:  http.MethodPost,
 				Path:    "/keywords",
 				Handler: keyword.AddSentimentKeywordHandler(serverCtx),
+				Desc:    "添加情感关键词（如crypto领域的bullish、crash，需指定权重和分类）",
 			},
 			{
-				// 获取指定分类的情感关键词列表
 				Method:  http.MethodGet,
-				Path:    "/keywords/category",
+				Path:    "/keywords/category/:category",
 				Handler: keyword.GetKeywordsByCategoryHandler(serverCtx),
+				Desc:    "获取指定分类的关键词列表（如crypto/stock/tech）",
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/keywords/:keyword/category/:category",
+				Handler: keyword.UpdateKeywordWeightHandler(serverCtx),
+				Desc:    "更新关键词权重（调整情感分析的加权系数）",
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/keywords/:keyword/category/:category",
+				Handler: keyword.DeleteKeywordHandler(serverCtx),
+				Desc:    "删除情感关键词（按关键词+分类唯一标识删除）",
+			},
+
+			// -------------------------- 4. 情感分析（Sentiment）领域路由 --------------------------
+			{
+				Method:  http.MethodGet,
+				Path:    "/tweets/:tweetId/sentiment",
+				Handler: sentiment.GetTweetSentimentHandler(serverCtx),
+				Desc:    "获取单条推文的情感分析结果（得分、标签、置信度）",
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/influencers/:username/sentiment/summary",
+				Handler: sentiment.GetInfluencerSentimentSummaryHandler(serverCtx),
+				Desc:    "获取大V情感汇总统计（支持7d/30d/90d时间范围）",
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/sentiment/summary/category/:category",
+				Handler: sentiment.GetCategorySentimentSummaryHandler(serverCtx),
+				Desc:    "获取指定领域分类的情感汇总（如crypto领域整体情感倾向）",
+			},
+
+			// -------------------------- 5. 健康检查路由 --------------------------
+			{
+				Method:  http.MethodGet,
+				Path:    "/health",
+				Handler: HealthCheckHandler(serverCtx),
+				Desc:    "服务健康检查（用于监控、部署检测）",
 			},
 		},
+		// 路由前缀：所有路由自动加上 /api/v1 前缀
 		rest.WithPrefix("/api/v1"),
+		// 可选：启用跨域（前端调用时需要）
+		// rest.WithCors(rest.AllowOrigin("*"), rest.AllowMethods("GET", "POST", "PUT", "DELETE")),
 	)
+}
+
+// HealthCheckHandler 服务健康检查 handler（简单实现）
+func HealthCheckHandler(_ *svc.ServiceContext) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"code":0,"message":"success","data":{"status":"healthy"}}`))
+	}
 }

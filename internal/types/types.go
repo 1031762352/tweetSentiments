@@ -45,10 +45,6 @@ type AddInfluencerRequest struct {
 	PullFrequency int    `json:"pullFrequency" validate:"min=5,max=1440"`   // 拉取频率（5~1440分钟，默认30）
 }
 
-type GetInfluencerByUsernameRequest struct {
-	Username string `form:"username" path:"username"` // 路径参数：用户名
-}
-
 type UpdateInfluencerActiveRequest struct {
 	Username int8 `form:"username" path:"username"`               // 路径参数：用户名（form适配GET/PUT）
 	IsActive int8 `json:"isActive" validate:"required,oneof=0 1"` // 请求体参数：活跃状态
