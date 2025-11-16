@@ -6,6 +6,7 @@ package handler
 import (
 	"net/http"
 
+	influencer "tweetSentiments/internal/handler/influencer"
 	"tweetSentiments/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -15,10 +16,30 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// 获取所有订阅大V
 				Method:  http.MethodGet,
-				Path:    "/from/:name",
-				Handler: TweetSentimentsHandler(serverCtx),
+				Path:    "/influencers",
+				Handler: influencer.GetInfluencersHandler(serverCtx),
+			},
+			{
+				// 添加订阅大V（通过Twitter用户名）
+				Method:  http.MethodPost,
+				Path:    "/influencers",
+				Handler: influencer.AddInfluencerHandler(serverCtx),
+			},
+			{
+				// 通过用户名获取大V详情
+				Method:  http.MethodGet,
+				Path:    "/influencers/username",
+				Handler: influencer.GetInfluencerByUsernameHandler(serverCtx),
+			},
+			{
+				// 暂停/恢复大V推文拉取（0=暂停，1=恢复）
+				Method:  http.MethodPut,
+				Path:    "/influencers/username/active",
+				Handler: influencer.UpdateInfluencerActiveHandler(serverCtx),
 			},
 		},
+		rest.WithPrefix("/api/v1"),
 	)
 }

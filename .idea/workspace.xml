@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="590ab8c4-4e08-4778-9bf5-e63d11192db2" name="Changes" comment="1" />
+    <list default="true" id="590ab8c4-4e08-4778-9bf5-e63d11192db2" name="Changes" comment="1">
+      <change afterPath="$PROJECT_DIR$/api/influencer.api" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/twitter_sentiment.api" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/handler/routes.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handler/routes.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/types/types.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/types/types.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tweetSentiments.api" beforeDir="false" afterPath="$PROJECT_DIR$/tweetSentiments.api" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -29,6 +37,7 @@
   &quot;associatedIndex&quot;: 2
 }</component>
   <component name="ProjectId" id="35YahO0uVSGoXWaDwVp4klIsHUw" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -47,11 +56,11 @@
     "git-widget-placeholder": "master",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "C:/Users/Administrator/GolandProjects/tweetSentiments",
+    "last_opened_file_path": "D:/BaiduNetdiskDownload/go-zero课件+源码单独下载-大地老师-B站/源码/08",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "go.sdk"
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings"
   }
 }]]></component>
   <component name="RunManager">
@@ -87,7 +96,21 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/.." />
+    </ignored-roots>
     <MESSAGE value="1" />
     <option name="LAST_COMMIT_MESSAGE" value="1" />
   </component>

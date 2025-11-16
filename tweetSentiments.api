@@ -1,15 +1,14 @@
 syntax = "v1"
 
-type Request {
-	Name string `path:"name,options=you|me"`
+//omitempty 标签在 JSON 序列化可以为空
+//optional  标签在 接收数据的时候可以为空
+// 返回值
+type CommonResponse {
+	Code    int         `json:"code"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data,omitempty"` //omitempty表示Data可以返回也可以不返回
+	Success bool        `json:"success"`
 }
 
-type Response {
-	Message string `json:"message"`
-}
-
-service tweetSentiments-api {
-	@handler TweetSentimentsHandler
-	get /from/:name (Request) returns (Response)
-}
+import "./api/influencer.api"
 
