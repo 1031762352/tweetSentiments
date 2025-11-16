@@ -1,0 +1,56 @@
+syntax = "v3"
+
+type (
+	// 公共响应结构体
+	BaseResponse {
+		Code    int    `json:"code"` // 状态码：0=成功，非0=失败
+		Message string `json:"message"` // 提示信息
+	}
+	// 关键词实体
+	SentimentKeyword {
+		Id        uint64  `json:"id"` // 主键ID
+		Keyword   string  `json:"keyword"` // 情感关键词（如bullish、crash）
+		Weight    float64 `json:"weight"` // 情感权重（正数=正面，负数=负面）
+		Category  string  `json:"category"` // 分类（如crypto/stock/tech）
+		Frequency int     `json:"frequency"` // 使用频率
+		CreatedAt string  `json:"createdAt"` // 添加时间（ISO8601格式）
+		UpdatedAt string  `json:"updatedAt"` // 更新时间（ISO8601格式）
+	}
+	// 响应结构体
+	AddKeywordResponse {
+		BaseResponse
+		Data SentimentKeyword `json:"data"` // 新增关键词详情
+	}
+	KeywordListResponse {
+		BaseResponse
+		Data []SentimentKeyword `json:"data"` // 关键词列表
+	}
+	// 请求结构体：添加关键词（请求体参数）
+	AddKeywordRequest {
+		Keyword  string  `json:"keyword" validate:"required,min=1,max=64"` // 关键词（必填）
+		Weight   float64 `json:"weight" validate:"required,gte=-5,lte=5"` // 权重（-5~5，必填）
+		Category string  `json:"category" validate:"required,min=1,max=32"` // 分类（必填）
+	}
+	// 请求结构体：按分类查询关键词（路径参数）
+	GetKeywordsByCategoryRequest {
+		Category string `form:"category" path:"category"` // 路径参数：关键词分类
+	}
+)
+
+// 服务配置
+@server (
+	group:  keyword
+	prefix: /api/v1
+)
+service keyword-api {
+	// 添加情感关键词（POST /api/v1/keywords）
+	@doc "添加领域情感关键词（如crypto相关的bullish、bearish）"
+	@handler AddSentimentKeywordHandler
+	post /keywords (AddKeywordRequest) returns (AddKeywordResponse)
+
+	// 按分类查询关键词（GET /api/v1/keywords/{category}）
+	@doc "获取指定分类的情感关键词列表"
+	@handler GetKeywordsByCategoryHandler
+	get /keywords/category (GetKeywordsByCategoryRequest) returns (KeywordListResponse)
+}
+

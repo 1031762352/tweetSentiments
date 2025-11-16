@@ -1,0 +1,95 @@
+syntax = "v3"
+
+type (
+	// 公共响应结构体
+	BaseResponse {
+		Code    int    `json:"code"` // 状态码：0=成功，非0=失败
+		Message string `json:"message"` // 提示信息
+	}
+	// 情感分析结果实体
+	SentimentResult {
+		SentimentScore    float64 `json:"sentimentScore"` // 情感得分（-1~1）
+		SentimentLabel    string  `json:"sentimentLabel"` // 情感标签（positive/negative/neutral）
+		Confidence        float64 `json:"confidence"` // 分析置信度（0~1）
+		KeywordScore      float64 `json:"keywordScore"` // 领域关键词加权分
+		SimilarTweetCount int     `json:"similarTweetCount"` // 相似历史推文数量
+		AnalyzedAt        string  `json:"analyzedAt"` // 分析时间（ISO8601格式）
+	}
+	// 带情感分析的推文
+	TweetWithSentiment {
+		Id                           uint64           `json:"id"` // 主键ID
+		TweetID                      string           `json:"tweetID"` // Twitter推文ID（id_str）
+		TwitterUserID                string           `json:"twitterUserID"` // 作者ID
+		Content                      string           `json:"content"` // 推文内容
+		CreatedAt                    string           `json:"createdAt"` // 发布时间（ISO8601格式）
+		Lang                         string           `json:"lang"` // 语言
+		Source                       string           `json:"source"` // 发布来源
+		IsOriginal                   int8             `json:"isOriginal"` // 是否原创（1=是）
+		ReferencedTweetID            string           `json:"referencedTweetID"` // 引用/转发的推文ID
+		ReferencedTweetType          string           `json:"referencedTweetType"` // 引用类型
+		PublicMetricsLikeCount       int              `json:"publicMetricsLikeCount"` // 点赞数
+		PublicMetricsRetweetCount    int              `json:"publicMetricsRetweetCount"` // 转发数
+		PublicMetricsReplyCount      int              `json:"publicMetricsReplyCount"` // 回复数
+		PublicMetricsQuoteCount      int              `json:"publicMetricsQuoteCount"` // 引用数
+		PublicMetricsImpressionCount int64            `json:"publicMetricsImpressionCount"` // 曝光量
+		PulledAt                     string           `json:"pulledAt"` // 拉取时间
+		Sentiment                    *SentimentResult `json:"sentiment,omitempty"` // 情感分析结果
+	}
+	// 情感分析分页响应数据
+	SentimentPageResponse {
+		List  []TweetWithSentiment `json:"list"` // 推文+情感分析列表
+		Total int64                `json:"total"` // 总条数
+		Page  int                  `json:"page"` // 当前页码
+		Size  int                  `json:"size"` // 每页条数
+	}
+	// 情感汇总数据
+	SentimentSummaryData {
+		Username              string  `json:"username"` // 大V用户名
+		PositiveCount         int64   `json:"positiveCount"` // 正面推文数
+		NegativeCount         int64   `json:"negativeCount"` // 负面推文数
+		NeutralCount          int64   `json:"neutralCount"` // 中性推文数
+		AverageSentimentScore float64 `json:"averageSentimentScore"` // 平均情感得分（-1~1）
+		AnalysisTimeRange     string  `json:"analysisTimeRange"` // 分析时间范围（如"近7天"）
+	}
+	// 响应结构体
+	TweetSentimentListResponse {
+		BaseResponse
+		Data SentimentPageResponse `json:"data"` // 情感分析分页数据
+	}
+	InfluencerSentimentSummaryResponse {
+		BaseResponse
+		Data SentimentSummaryData `json:"data"` // 情感汇总数据
+	}
+	// 请求结构体：获取情感分析列表（整合路径+查询参数）
+	GetTweetSentimentListRequest {
+		Username  string `form:"username" path:"username"` // 路径参数：大V用户名
+		Page      int    `form:"page" validate:"min=1"` // 查询参数：页码（默认1）
+		Size      int    `form:"size" validate:"min=1,max=50"` // 查询参数：每页条数（默认20，最大50）
+		StartTime string `form:"startTime,omitempty"` // 查询参数：开始时间（ISO8601格式）
+		EndTime   string `form:"endTime,omitempty"` // 查询参数：结束时间（ISO8601格式）
+		Sentiment string `form:"sentiment,omitempty" validate:"omitempty,oneof=positive negative neutral"` // 查询参数：情感标签筛选
+	}
+	// 请求结构体：获取情感汇总（整合路径+查询参数）
+	GetInfluencerSentimentSummaryRequest {
+		Username  string `form:"username" path:"username"` // 路径参数：大V用户名
+		TimeRange string `form:"timeRange,omitempty" validate:"omitempty,oneof=7d 30d 90d"` // 查询参数：时间范围（默认7天）
+	}
+)
+
+// 服务配置
+@server (
+	group:  sentiment
+	prefix: /api/v1
+)
+service sentiment-api {
+	// 获取推文情感分析结果（GET /api/v1/influencers/{username}/tweets/sentiment）
+	@doc "获取大V推文+情感分析结果（支持情感标签筛选）"
+	@handler GetTweetSentimentListHandler
+	get /influencers/username/tweets/sentiment (GetTweetSentimentListRequest) returns (TweetSentimentListResponse)
+
+	// 获取大V情感汇总（GET /api/v1/influencers/{username}/sentiment/summary）
+	@doc "获取大V推文情感分布和平均得分"
+	@handler GetInfluencerSentimentSummaryHandler
+	get /influencers/username/sentiment/summary (GetInfluencerSentimentSummaryRequest) returns (InfluencerSentimentSummaryResponse)
+}
+

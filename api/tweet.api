@@ -1,0 +1,61 @@
+syntax = "v3"
+
+type (
+	// 公共响应结构体（与大V领域一致）
+	BaseResponse {
+		Code    int    `json:"code"` // 状态码：0=成功，非0=失败
+		Message string `json:"message"` // 提示信息
+	}
+	// 推文实体
+	Tweet {
+		Id                           uint64 `json:"id"` // 主键ID
+		TweetID                      string `json:"tweetID"` // Twitter推文ID（id_str）
+		TwitterUserID                string `json:"twitterUserID"` // 作者ID
+		Content                      string `json:"content"` // 推文内容
+		CreatedAt                    string `json:"createdAt"` // 发布时间（ISO8601格式）
+		Lang                         string `json:"lang"` // 语言
+		Source                       string `json:"source"` // 发布来源
+		IsOriginal                   int8   `json:"isOriginal"` // 是否原创（1=是）
+		ReferencedTweetID            string `json:"referencedTweetID"` // 引用/转发的推文ID
+		ReferencedTweetType          string `json:"referencedTweetType"` // 引用类型（retweeted/quoted/replied_to）
+		PublicMetricsLikeCount       int    `json:"publicMetricsLikeCount"` // 点赞数
+		PublicMetricsRetweetCount    int    `json:"publicMetricsRetweetCount"` // 转发数
+		PublicMetricsReplyCount      int    `json:"publicMetricsReplyCount"` // 回复数
+		PublicMetricsQuoteCount      int    `json:"publicMetricsQuoteCount"` // 引用数
+		PublicMetricsImpressionCount int64  `json:"publicMetricsImpressionCount"` // 曝光量
+		PulledAt                     string `json:"pulledAt"` // 拉取时间（ISO8601格式）
+	}
+	// 分页响应数据结构体
+	PageResponse {
+		List  []Tweet `json:"list"` // 推文列表
+		Total int64   `json:"total"` // 总条数
+		Page  int     `json:"page"` // 当前页码
+		Size  int     `json:"size"` // 每页条数
+	}
+	// 响应结构体
+	TweetListResponse {
+		BaseResponse
+		Data PageResponse `json:"data"` // 分页推文数据
+	}
+	// 整合路径参数（username）和查询参数（分页/时间范围）
+	GetInfluencerTweetsRequest {
+		Username  string `form:"username" path:"username"` // 路径参数：大V用户名
+		Page      int    `form:"page" validate:"min=1"` // 查询参数：页码（默认1）
+		Size      int    `form:"size" validate:"min=1,max=50"` // 查询参数：每页条数（默认20，最大50）
+		StartTime string `form:"startTime,omitempty"` // 查询参数：开始时间（ISO8601格式）
+		EndTime   string `form:"endTime,omitempty"` // 查询参数：结束时间（ISO8601格式）
+	}
+)
+
+// 服务配置（分组+前缀与大V领域一致）
+@server (
+	group:  tweet
+	prefix: /api/v1
+)
+service tweet-api {
+	// 获取大V原始推文（GET /api/v1/influencers/{username}/tweets/raw）
+	@doc "获取大V原始推文（不包含情感分析结果）"
+	@handler GetInfluencerTweetsHandler
+	get /influencers/username/tweets/raw (GetInfluencerTweetsRequest) returns (TweetListResponse)
+}
+

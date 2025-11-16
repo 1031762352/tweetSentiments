@@ -3,9 +3,15 @@
 
 package types
 
-type AddInfluencerRequest struct {
-	Username      string `json:"username" validate:"required,min=1,max=64"` // Twitter用户名（必填）
-	PullFrequency int    `json:"pullFrequency" validate:"min=5,max=1440"`   // 拉取频率（5~1440分钟，默认30）
+type AddKeywordRequest struct {
+	Keyword  string  `json:"keyword" validate:"required,min=1,max=64"`  // 关键词（必填）
+	Weight   float64 `json:"weight" validate:"required,gte=-5,lte=5"`   // 权重（-5~5，必填）
+	Category string  `json:"category" validate:"required,min=1,max=32"` // 分类（必填）
+}
+
+type AddKeywordResponse struct {
+	BaseResponse
+	Data SentimentKeyword `json:"data"` // 新增关键词详情
 }
 
 type BaseResponse struct {
@@ -13,41 +19,21 @@ type BaseResponse struct {
 	Message string `json:"message"` // 提示信息
 }
 
-type GetInfluencerByUsernameRequest struct {
-	Username string `form:"username" path:"username"` // 路径参数：用户名
+type GetKeywordsByCategoryRequest struct {
+	Category string `form:"category" path:"category"` // 路径参数：关键词分类
 }
 
-type Influencer struct {
-	Id                      uint64 `json:"id"`                      // 主键ID
-	TwitterUserID           string `json:"twitterUserID"`           // Twitter官方用户ID（id_str）
-	Username                string `json:"username"`                // Twitter用户名（如elonmusk）
-	Name                    string `json:"name"`                    // 大V昵称
-	AvatarURL               string `json:"avatarURL"`               // 头像URL
-	Description             string `json:"description"`             // 个人简介
-	Location                string `json:"location"`                // 所在地
-	URL                     string `json:"url"`                     // 个人网站
-	PublicMetricsFollowers  int64  `json:"publicMetricsFollowers"`  // 粉丝数
-	PublicMetricsFollowing  int    `json:"publicMetricsFollowing"`  // 关注数
-	PublicMetricsTweetCount int    `json:"publicMetricsTweetCount"` // 推文总数
-	IsVerified              int8   `json:"isVerified"`              // 是否认证（1=是）
-	IsActive                int8   `json:"isActive"`                // 是否活跃拉取（1=是）
-	PullFrequency           int    `json:"pullFrequency"`           // 拉取频率（分钟）
-	LastPullTweetID         string `json:"lastPullTweetID"`         // 上次拉取的最后一条推文ID
-	CreatedAt               string `json:"createdAt"`               // 订阅时间（ISO8601格式）
-	UpdatedAt               string `json:"updatedAt"`               // 更新时间（ISO8601格式）
-}
-
-type InfluencerDetailResponse struct {
+type KeywordListResponse struct {
 	BaseResponse
-	Data Influencer `json:"data"` // 单个大V详情
+	Data []SentimentKeyword `json:"data"` // 关键词列表
 }
 
-type InfluencerListResponse struct {
-	BaseResponse
-	Data []Influencer `json:"data"` // 大V列表
-}
-
-type UpdateInfluencerActiveRequest struct {
-	Username int8 `form:"username" path:"username"`               // 路径参数：用户名（form适配GET/PUT）
-	IsActive int8 `json:"isActive" validate:"required,oneof=0 1"` // 请求体参数：活跃状态
+type SentimentKeyword struct {
+	Id        uint64  `json:"id"`        // 主键ID
+	Keyword   string  `json:"keyword"`   // 情感关键词（如bullish、crash）
+	Weight    float64 `json:"weight"`    // 情感权重（正数=正面，负数=负面）
+	Category  string  `json:"category"`  // 分类（如crypto/stock/tech）
+	Frequency int     `json:"frequency"` // 使用频率
+	CreatedAt string  `json:"createdAt"` // 添加时间（ISO8601格式）
+	UpdatedAt string  `json:"updatedAt"` // 更新时间（ISO8601格式）
 }
