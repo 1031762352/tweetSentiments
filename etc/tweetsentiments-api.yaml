@@ -1,3 +1,47 @@
-Name: tweetSentiments-api
-Host: 0.0.0.0
-Port: 8888
+# HTTP服务配置（go-zero rest标准配置）
+rest:
+  host: 0.0.0.0          # 监听地址（0.0.0.0 允许外部访问）
+  port: 8888             # 服务端口
+  timeout: 30000         # 请求超时时间（单位：毫秒）
+  idleTimeout: 60000     # 空闲连接超时时间（单位：毫秒）
+  maxConns: 1000         # 最大并发连接数
+  log:
+    mode: file           # 日志输出模式（file/fileAndConsole）
+    path: logs/api       # 日志存储路径
+    level: info          # 日志级别（debug/info/warn/error）
+    keepDays: 7          # 日志保留天数
+
+# MySQL数据库配置
+mysql:
+  dsn: "root:123456@tcp(127.0.0.1:3306)/tweet_sentiment?charset=utf8mb4&parseTime=True&loc=Local"
+
+# Qdrant向量数据库配置
+qdrant:
+  endpoint: "http://127.0.0.1:6334"
+  apiKey: ""             # 本地部署默认无APIKey，生产环境需配置
+  collectionName: "tweet_sentiments"
+
+# Twitter API配置
+twitter:
+  bearerToken: "your-twitter-bearer-token"  # 替换为你的Twitter开发者Token
+  timeout: 30
+  maxRetries: 3
+
+# 嵌入服务配置（示例：使用OpenAI API，可替换为本地模型如sentence-transformers）
+embedding:
+  endpoint: "https://api.openai.com/v1/embeddings"
+  apiKey: "your-openai-api-key"
+  model: "text-embedding-3-small"
+
+# 缓存配置（可选，使用Redis缓存热点数据）
+cache:
+  - node: "127.0.0.1:6379"
+    type: redis
+    password: ""
+    db: 0
+
+# 定时任务配置（Cron表达式：秒 分 时 日 月 周）
+cron:
+  tweetPullCron: "0 */30 * * * *"    # 每30分钟拉取一次推文
+  sentimentCron: "5 */30 * * * *"    # 拉取后5秒执行情感分析
+  summaryCron: "0 0 * * * *"        # 每天凌晨执行情感汇总

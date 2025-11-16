@@ -1,14 +1,15 @@
-syntax = "v1"
+syntax = "v3"
 
-//omitempty 标签在 JSON 序列化可以为空
-//optional  标签在 接收数据的时候可以为空
-// 返回值
+// 统一公共响应结构体（所有领域共用）
 type CommonResponse {
-	Code    int         `json:"code"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data,omitempty"` //omitempty表示Data可以返回也可以不返回
-	Success bool        `json:"success"`
+	Code    int         `json:"code"`    // 状态码：0=成功，非0=失败
+	Message string      `json:"message"` // 提示信息
+	Data    interface{} `json:"data,omitempty"` // 响应数据（可选）
+	Success bool        `json:"success"` // 成功标识
 }
 
+// 引入子API文件（路径必须正确，相对路径从总文件出发）
 import "./api/influencer.api"
-
+import "./api/tweet.api"
+import "./api/sentiment.api"
+import "./api/keyword.api"

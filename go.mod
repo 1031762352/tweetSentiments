@@ -2,7 +2,10 @@ module tweetSentiments
 
 go 1.25.0
 
-require github.com/zeromicro/go-zero v1.9.2
+require (
+	github.com/zeromicro/go-zero v1.9.2
+	gorm.io/gorm v1.31.1
+)
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -16,6 +19,8 @@ require (
 	github.com/grafana/pyroscope-go v1.2.7 // indirect
 	github.com/grafana/pyroscope-go/godeltaprof v0.1.9 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.20.0 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/klauspost/compress v1.17.11 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect

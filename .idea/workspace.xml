@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="590ab8c4-4e08-4778-9bf5-e63d11192db2" name="Changes" comment="feat(keyword): 实现情感关键词管理功能&#10;&#10;- 添加领域情感关键词（如crypto相关的bullish、bearish）&#10;- 支持按分类查询情感关键词列表" />
+    <list default="true" id="590ab8c4-4e08-4778-9bf5-e63d11192db2" name="Changes" comment="feat(types): 定义项目核心数据结构&#10;&#10;- 添加基础响应结构体BaseResponse&#10;-">
+      <change afterPath="$PROJECT_DIR$/model/gorm/base_model.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/gorm/influencer_model.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/gorm/keyword_model.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/gorm/sentiment_model.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/gorm/tweet_model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tweetSentiments.api" beforeDir="false" afterPath="$PROJECT_DIR$/tweetSentiments.api" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,12 +31,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/1031762352/tweetSentiments.git",
-    "accountId": "4d4dfcaa-5c3c-447f-b533-3a9f6cda8280"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;1031762352&quot;
   }
-}]]></component>
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/1031762352/tweetSentiments.git&quot;,
+    &quot;accountId&quot;: &quot;4d4dfcaa-5c3c-447f-b533-3a9f6cda8280&quot;
+  }
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -113,7 +129,8 @@
     <MESSAGE value="123" />
     <MESSAGE value="feat(keyword): 添加领域情感关键词管理功能&#10;&#10;- 新增添加情感关键词接口（POST /api/v1/keywords）&#10;- 新增按分类查询关键词接口（GET /api/v1/keywords/category）- 定义关键词相关请求/响应结构体- 实现关键词业务逻辑层代码- 配置路由和处理器函数&#10;-生成对应的服务入口文件" />
     <MESSAGE value="feat(keyword): 实现情感关键词管理功能&#10;&#10;- 添加领域情感关键词（如crypto相关的bullish、bearish）&#10;- 支持按分类查询情感关键词列表" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(keyword): 实现情感关键词管理功能&#10;&#10;- 添加领域情感关键词（如crypto相关的bullish、bearish）&#10;- 支持按分类查询情感关键词列表" />
+    <MESSAGE value="feat(types): 定义项目核心数据结构&#10;&#10;- 添加基础响应结构体BaseResponse&#10;-" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(types): 定义项目核心数据结构&#10;&#10;- 添加基础响应结构体BaseResponse&#10;-" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
