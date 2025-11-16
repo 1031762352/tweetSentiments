@@ -1,7 +1,8 @@
 package model
 
+import "gorm.io/gorm"
+
 // Tweet 推文数据表
-// 存储从Twitter拉取的大V推文原始数据
 type Tweet struct {
 	BaseModel                           // 嵌入公共基础字段
 	TweetID                      string `gorm:"column:tweet_id;type:varchar(64);not null;uniqueIndex;comment:'Twitter推文ID（id_str，全局唯一）'" json:"tweetID"`
@@ -24,4 +25,14 @@ type Tweet struct {
 // TableName 指定数据库表名
 func (t *Tweet) TableName() string {
 	return "t_tweet"
+}
+
+// NewTweet 无参数构造函数（返回指针）
+func NewTweet() *Tweet {
+	return &Tweet{}
+}
+
+// 示例CRUD方法（需要db时传入）
+func (t *Tweet) Create(db *gorm.DB, tweet *Tweet) error {
+	return db.Create(tweet).Error
 }

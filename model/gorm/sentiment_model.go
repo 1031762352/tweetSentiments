@@ -1,7 +1,6 @@
 package model
 
 // SentimentResult 情感分析结果表
-// 与推文表（t_tweet）一对一关联，存储每条推文的情感分析数据
 type SentimentResult struct {
 	BaseModel                 // 嵌入公共基础字段
 	TweetID           string  `gorm:"column:tweet_id;type:varchar(64);not null;uniqueIndex;comment:'关联的推文ID（关联t_tweet.tweet_id，一对一）'" json:"tweetID"`
@@ -18,8 +17,12 @@ func (s *SentimentResult) TableName() string {
 	return "t_sentiment_result"
 }
 
+// NewSentimentResult 无参数构造函数（返回指针）
+func NewSentimentResult() *SentimentResult {
+	return &SentimentResult{}
+}
+
 // InfluencerSentimentSummary 大V情感汇总表
-// 按大V+时间范围统计情感分布，避免实时计算
 type InfluencerSentimentSummary struct {
 	BaseModel                     // 嵌入公共基础字段
 	Username              string  `gorm:"column:username;type:varchar(64);not null;index:idx_username_time_range,unique;comment:'大V用户名（关联t_influencer.username）'" json:"username"`
@@ -33,4 +36,9 @@ type InfluencerSentimentSummary struct {
 // TableName 指定数据库表名
 func (i *InfluencerSentimentSummary) TableName() string {
 	return "t_influencer_sentiment_summary"
+}
+
+// NewInfluencerSentimentSummary 无参数构造函数（返回指针）
+func NewInfluencerSentimentSummary() *InfluencerSentimentSummary {
+	return &InfluencerSentimentSummary{}
 }

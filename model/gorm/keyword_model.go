@@ -1,7 +1,8 @@
 package model
 
+import "gorm.io/gorm"
+
 // SentimentKeyword 情感关键词表
-// 存储领域相关的情感关键词，用于辅助情感分析评分
 type SentimentKeyword struct {
 	BaseModel         // 嵌入公共基础字段
 	Keyword   string  `gorm:"column:keyword;type:varchar(64);not null;index:idx_keyword_category,unique;comment:'情感关键词（如bullish=看涨，crash=崩盘）'" json:"keyword"`
@@ -13,4 +14,16 @@ type SentimentKeyword struct {
 // TableName 指定数据库表名
 func (s *SentimentKeyword) TableName() string {
 	return "t_sentiment_keyword"
+}
+
+// NewSentimentKeyword 无参数构造函数（返回指针）
+func NewSentimentKeyword() *SentimentKeyword {
+	return &SentimentKeyword{}
+}
+
+// 示例CRUD方法
+func (s *SentimentKeyword) GetByCategory(db *gorm.DB, category string) ([]*SentimentKeyword, error) {
+	var keywords []*SentimentKeyword
+	err := db.Where("category = ?", category).Find(&keywords).Error
+	return keywords, err
 }

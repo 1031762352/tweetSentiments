@@ -4,16 +4,15 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="590ab8c4-4e08-4778-9bf5-e63d11192db2" name="Changes" comment="feat(types): 定义项目核心数据结构&#10;&#10;- 添加基础响应结构体BaseResponse&#10;-">
-      <change afterPath="$PROJECT_DIR$/model/gorm/base_model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/gorm/influencer_model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/gorm/keyword_model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/gorm/sentiment_model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/gorm/tweet_model.go" afterDir="false" />
+    <list default="true" id="590ab8c4-4e08-4778-9bf5-e63d11192db2" name="Changes" comment="feat(model): 添加核心数据模型与配置结构&#10;&#10;- 新增 BaseModel 基础字段结构体，包含 ID、创建时间、更新时间及软删除字段&#10;- 定义 Influencer 大V信息表结构，用于存储Twitter大V基础数据&#10;- 添加 SentimentKeyword 情感关键词表结构，支持分类与权重配置&#10;- 创建 SentimentResult 情感分析结果表与 InfluencerSentimentSummary 汇总表结构&#10;- 定义 Tweet 推文数据表结构，支持存储原始推文内容及相关指标&#10;- 扩展 Config 配置结构体，新增 MySQL、Qdrant、Twitter、Embedding 等模块配置项- 更新 go.mod 和 go.sum，引入 gorm 及相关依赖库- 修改 tweetsentiments-api.yaml 配置文件，完善各模块配置参数&#10;- 调整 tweetSentiments.api 文件语法版本至 v3 并导入子API模块&#10;- 在 ServiceContext 中初始化并注入 GORM模型实例- 为所有模型添加构造函数和示例CRUD方法&#10;- 优化MySQL连接池配置，提升数据库访问性能">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tweetSentiments.api" beforeDir="false" afterPath="$PROJECT_DIR$/tweetSentiments.api" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/svc/servicecontext.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/svc/servicecontext.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/gorm/influencer_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/gorm/influencer_model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/gorm/keyword_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/gorm/keyword_model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/gorm/sentiment_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/gorm/sentiment_model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/gorm/tweet_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/gorm/tweet_model.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +129,9 @@
     <MESSAGE value="feat(keyword): 添加领域情感关键词管理功能&#10;&#10;- 新增添加情感关键词接口（POST /api/v1/keywords）&#10;- 新增按分类查询关键词接口（GET /api/v1/keywords/category）- 定义关键词相关请求/响应结构体- 实现关键词业务逻辑层代码- 配置路由和处理器函数&#10;-生成对应的服务入口文件" />
     <MESSAGE value="feat(keyword): 实现情感关键词管理功能&#10;&#10;- 添加领域情感关键词（如crypto相关的bullish、bearish）&#10;- 支持按分类查询情感关键词列表" />
     <MESSAGE value="feat(types): 定义项目核心数据结构&#10;&#10;- 添加基础响应结构体BaseResponse&#10;-" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(types): 定义项目核心数据结构&#10;&#10;- 添加基础响应结构体BaseResponse&#10;-" />
+    <MESSAGE value="feat(model): 添加核心数据模型与配置结构&#10;&#10;- 新增 BaseModel 基础字段结构体，包含 ID、创建时间、更新时间及软删除字段&#10;- 定义 Influencer 大V信息表结构，用于存储Twitter大V基础数据&#10;- 添加 SentimentKeyword 情感关键词表结构，支持分类与权重配置&#10;- 创建 SentimentResult 情感分析结果表与 InfluencerSentimentSummary 汇总表结构&#10;- 定义 Tweet 推文数据表结构，支持存储原始推文内容及相关指标&#10;- 扩展 Config 配置结构体，新增 MySQL、Qdrant、Twitter、Embedding 等模块配置项&#10;- 更新 go.mod 和 go.sum，引入 gorm 及相关依赖库&#10;- 修改 tweetsentiments-api.yaml 配置文件，完善各模块配置参数&#10;- 调整 tweetSentiments.api 文件语法版本至 v3 并导入子API模块- 在 ServiceContext 中初始化并注入 G" />
+    <MESSAGE value="feat(model): 添加核心数据模型与配置结构&#10;&#10;- 新增 BaseModel 基础字段结构体，包含 ID、创建时间、更新时间及软删除字段&#10;- 定义 Influencer 大V信息表结构，用于存储Twitter大V基础数据&#10;- 添加 SentimentKeyword 情感关键词表结构，支持分类与权重配置&#10;- 创建 SentimentResult 情感分析结果表与 InfluencerSentimentSummary 汇总表结构&#10;- 定义 Tweet 推文数据表结构，支持存储原始推文内容及相关指标&#10;- 扩展 Config 配置结构体，新增 MySQL、Qdrant、Twitter、Embedding 等模块配置项- 更新 go.mod 和 go.sum，引入 gorm 及相关依赖库- 修改 tweetsentiments-api.yaml 配置文件，完善各模块配置参数&#10;- 调整 tweetSentiments.api 文件语法版本至 v3 并导入子API模块&#10;- 在 ServiceContext 中初始化并注入 GORM模型实例- 为所有模型添加构造函数和示例CRUD方法&#10;- 优化MySQL连接池配置，提升数据库访问性能" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(model): 添加核心数据模型与配置结构&#10;&#10;- 新增 BaseModel 基础字段结构体，包含 ID、创建时间、更新时间及软删除字段&#10;- 定义 Influencer 大V信息表结构，用于存储Twitter大V基础数据&#10;- 添加 SentimentKeyword 情感关键词表结构，支持分类与权重配置&#10;- 创建 SentimentResult 情感分析结果表与 InfluencerSentimentSummary 汇总表结构&#10;- 定义 Tweet 推文数据表结构，支持存储原始推文内容及相关指标&#10;- 扩展 Config 配置结构体，新增 MySQL、Qdrant、Twitter、Embedding 等模块配置项- 更新 go.mod 和 go.sum，引入 gorm 及相关依赖库- 修改 tweetsentiments-api.yaml 配置文件，完善各模块配置参数&#10;- 调整 tweetSentiments.api 文件语法版本至 v3 并导入子API模块&#10;- 在 ServiceContext 中初始化并注入 GORM模型实例- 为所有模型添加构造函数和示例CRUD方法&#10;- 优化MySQL连接池配置，提升数据库访问性能" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
