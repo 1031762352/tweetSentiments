@@ -4,23 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="590ab8c4-4e08-4778-9bf5-e63d11192db2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/api/keyword.api" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/sentiment.api" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/tweet.api" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/etc/influencer-api.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/handler/influencer/addinfluencerhandler.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/handler/influencer/getinfluencerbyusernamehandler.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/handler/influencer/getinfluencershandler.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/handler/influencer/updateinfluenceractivehandler.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/logic/influencer/addinfluencerlogic.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/logic/influencer/getinfluencerbyusernamelogic.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/logic/influencer/getinfluencerslogic.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/logic/influencer/updateinfluenceractivelogic.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/handler/routes.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handler/routes.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/types/types.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/types/types.go" afterDir="false" />
-    </list>
+    <list default="true" id="590ab8c4-4e08-4778-9bf5-e63d11192db2" name="Changes" comment="feat(keyword): 实现情感关键词管理功能&#10;&#10;- 添加领域情感关键词（如crypto相关的bullish、bearish）&#10;- 支持按分类查询情感关键词列表" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -37,6 +21,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/1031762352/tweetSentiments.git",
+    "accountId": "4d4dfcaa-5c3c-447f-b533-3a9f6cda8280"
+  }
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -50,27 +40,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
-    "Go Build.go build tweetSentiments.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "master",
-    "go.import.settings.migrated": "true",
-    "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "D:/BaiduNetdiskDownload/go-zero课件+源码单独下载-大地老师-B站/源码/08",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;Go Build.go build tweetSentiments.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/BaiduNetdiskDownload/go-zero课件+源码单独下载-大地老师-B站/源码/08&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="go build tweetSentiments" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="tweetSentiments" />
@@ -121,7 +111,9 @@
     </ignored-roots>
     <MESSAGE value="1" />
     <MESSAGE value="123" />
-    <option name="LAST_COMMIT_MESSAGE" value="123" />
+    <MESSAGE value="feat(keyword): 添加领域情感关键词管理功能&#10;&#10;- 新增添加情感关键词接口（POST /api/v1/keywords）&#10;- 新增按分类查询关键词接口（GET /api/v1/keywords/category）- 定义关键词相关请求/响应结构体- 实现关键词业务逻辑层代码- 配置路由和处理器函数&#10;-生成对应的服务入口文件" />
+    <MESSAGE value="feat(keyword): 实现情感关键词管理功能&#10;&#10;- 添加领域情感关键词（如crypto相关的bullish、bearish）&#10;- 支持按分类查询情感关键词列表" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(keyword): 实现情感关键词管理功能&#10;&#10;- 添加领域情感关键词（如crypto相关的bullish、bearish）&#10;- 支持按分类查询情感关键词列表" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

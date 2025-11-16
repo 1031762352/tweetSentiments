@@ -3,6 +3,178 @@
 
 package types
 
+// ==================== 公共结构体 ====================
+type BaseResponse struct {
+	Code    int    `json:"code"`    // 状态码：0=成功，非0=失败
+	Message string `json:"message"` // 提示信息
+}
+
+// ==================== 1. 大V管理领域 ====================
+type Influencer struct {
+	Id                      uint64 `json:"id"`                      // 主键ID
+	TwitterUserID           string `json:"twitterUserID"`           // Twitter官方用户ID（id_str）
+	Username                string `json:"username"`                // Twitter用户名（如elonmusk）
+	Name                    string `json:"name"`                    // 大V昵称
+	AvatarURL               string `json:"avatarURL"`               // 头像URL
+	Description             string `json:"description"`             // 个人简介
+	Location                string `json:"location"`                // 所在地
+	URL                     string `json:"url"`                     // 个人网站
+	PublicMetricsFollowers  int64  `json:"publicMetricsFollowers"`  // 粉丝数
+	PublicMetricsFollowing  int    `json:"publicMetricsFollowing"`  // 关注数
+	PublicMetricsTweetCount int    `json:"publicMetricsTweetCount"` // 推文总数
+	IsVerified              int8   `json:"isVerified"`              // 是否认证（1=是）
+	IsActive                int8   `json:"isActive"`                // 是否活跃拉取（1=是）
+	PullFrequency           int    `json:"pullFrequency"`           // 拉取频率（分钟）
+	LastPullTweetID         string `json:"lastPullTweetID"`         // 上次拉取的最后一条推文ID
+	CreatedAt               string `json:"createdAt"`               // 订阅时间（ISO8601格式）
+	UpdatedAt               string `json:"updatedAt"`               // 更新时间（ISO8601格式）
+}
+
+type InfluencerListResponse struct {
+	BaseResponse
+	Data []Influencer `json:"data"` // 大V列表
+}
+
+type InfluencerDetailResponse struct {
+	BaseResponse
+	Data Influencer `json:"data"` // 单个大V详情
+}
+
+type AddInfluencerRequest struct {
+	Username      string `json:"username" validate:"required,min=1,max=64"` // Twitter用户名（必填）
+	PullFrequency int    `json:"pullFrequency" validate:"min=5,max=1440"`   // 拉取频率（5~1440分钟，默认30）
+}
+
+type GetInfluencerByUsernameRequest struct {
+	Username string `form:"username" path:"username"` // 路径参数：用户名
+}
+
+type UpdateInfluencerActiveRequest struct {
+	Username int8 `form:"username" path:"username"`               // 路径参数：用户名（form适配GET/PUT）
+	IsActive int8 `json:"isActive" validate:"required,oneof=0 1"` // 请求体参数：活跃状态
+}
+
+// ==================== 2. 推文管理领域 ====================
+type Tweet struct {
+	Id                           uint64 `json:"id"`                           // 主键ID
+	TweetID                      string `json:"tweetID"`                      // Twitter推文ID（id_str）
+	TwitterUserID                string `json:"twitterUserID"`                // 作者ID
+	Content                      string `json:"content"`                      // 推文内容
+	CreatedAt                    string `json:"createdAt"`                    // 发布时间（ISO8601格式）
+	Lang                         string `json:"lang"`                         // 语言
+	Source                       string `json:"source"`                       // 发布来源
+	IsOriginal                   int8   `json:"isOriginal"`                   // 是否原创（1=是）
+	ReferencedTweetID            string `json:"referencedTweetID"`            // 引用/转发的推文ID
+	ReferencedTweetType          string `json:"referencedTweetType"`          // 引用类型（retweeted/quoted/replied_to）
+	PublicMetricsLikeCount       int    `json:"publicMetricsLikeCount"`       // 点赞数
+	PublicMetricsRetweetCount    int    `json:"publicMetricsRetweetCount"`    // 转发数
+	PublicMetricsReplyCount      int    `json:"publicMetricsReplyCount"`      // 回复数
+	PublicMetricsQuoteCount      int    `json:"publicMetricsQuoteCount"`      // 引用数
+	PublicMetricsImpressionCount int64  `json:"publicMetricsImpressionCount"` // 曝光量
+	PulledAt                     string `json:"pulledAt"`                     // 拉取时间（ISO8601格式）
+}
+
+type PageResponse struct {
+	List  []Tweet `json:"list"`  // 推文列表
+	Total int64   `json:"total"` // 总条数
+	Page  int     `json:"page"`  // 当前页码
+	Size  int     `json:"size"`  // 每页条数
+}
+
+type TweetListResponse struct {
+	BaseResponse
+	Data PageResponse `json:"data"` // 分页推文数据
+}
+
+type GetInfluencerTweetsRequest struct {
+	Username  string `form:"username" path:"username"`     // 路径参数：大V用户名
+	Page      int    `form:"page" validate:"min=1"`        // 查询参数：页码（默认1）
+	Size      int    `form:"size" validate:"min=1,max=50"` // 查询参数：每页条数（默认20，最大50）
+	StartTime string `form:"startTime,omitempty"`          // 查询参数：开始时间（ISO8601格式）
+	EndTime   string `form:"endTime,omitempty"`            // 查询参数：结束时间（ISO8601格式）
+}
+
+// ==================== 3. 情感分析领域 ====================
+type SentimentResult struct {
+	SentimentScore    float64 `json:"sentimentScore"`    // 情感得分（-1~1）
+	SentimentLabel    string  `json:"sentimentLabel"`    // 情感标签（positive/negative/neutral）
+	Confidence        float64 `json:"confidence"`        // 分析置信度（0~1）
+	KeywordScore      float64 `json:"keywordScore"`      // 领域关键词加权分
+	SimilarTweetCount int     `json:"similarTweetCount"` // 相似历史推文数量
+	AnalyzedAt        string  `json:"analyzedAt"`        // 分析时间（ISO8601格式）
+}
+
+type TweetWithSentiment struct {
+	Id                           uint64           `json:"id"`                           // 主键ID
+	TweetID                      string           `json:"tweetID"`                      // Twitter推文ID（id_str）
+	TwitterUserID                string           `json:"twitterUserID"`                // 作者ID
+	Content                      string           `json:"content"`                      // 推文内容
+	CreatedAt                    string           `json:"createdAt"`                    // 发布时间（ISO8601格式）
+	Lang                         string           `json:"lang"`                         // 语言
+	Source                       string           `json:"source"`                       // 发布来源
+	IsOriginal                   int8             `json:"isOriginal"`                   // 是否原创（1=是）
+	ReferencedTweetID            string           `json:"referencedTweetID"`            // 引用/转发的推文ID
+	ReferencedTweetType          string           `json:"referencedTweetType"`          // 引用类型
+	PublicMetricsLikeCount       int              `json:"publicMetricsLikeCount"`       // 点赞数
+	PublicMetricsRetweetCount    int              `json:"publicMetricsRetweetCount"`    // 转发数
+	PublicMetricsReplyCount      int              `json:"publicMetricsReplyCount"`      // 回复数
+	PublicMetricsQuoteCount      int              `json:"publicMetricsQuoteCount"`      // 引用数
+	PublicMetricsImpressionCount int64            `json:"publicMetricsImpressionCount"` // 曝光量
+	PulledAt                     string           `json:"pulledAt"`                     // 拉取时间
+	Sentiment                    *SentimentResult `json:"sentiment,omitempty"`          // 情感分析结果
+}
+
+type SentimentPageResponse struct {
+	List  []TweetWithSentiment `json:"list"`  // 推文+情感分析列表
+	Total int64                `json:"total"` // 总条数
+	Page  int                  `json:"page"`  // 当前页码
+	Size  int                  `json:"size"`  // 每页条数
+}
+
+type SentimentSummaryData struct {
+	Username              string  `json:"username"`              // 大V用户名
+	PositiveCount         int64   `json:"positiveCount"`         // 正面推文数
+	NegativeCount         int64   `json:"negativeCount"`         // 负面推文数
+	NeutralCount          int64   `json:"neutralCount"`          // 中性推文数
+	AverageSentimentScore float64 `json:"averageSentimentScore"` // 平均情感得分（-1~1）
+	AnalysisTimeRange     string  `json:"analysisTimeRange"`     // 分析时间范围（如"近7天"）
+}
+
+type TweetSentimentListResponse struct {
+	BaseResponse
+	Data SentimentPageResponse `json:"data"` // 情感分析分页数据
+}
+
+type InfluencerSentimentSummaryResponse struct {
+	BaseResponse
+	Data SentimentSummaryData `json:"data"` // 情感汇总数据
+}
+
+type GetTweetSentimentListRequest struct {
+	Username  string `form:"username" path:"username"`                                                 // 路径参数：大V用户名
+	Page      int    `form:"page" validate:"min=1"`                                                    // 查询参数：页码（默认1）
+	Size      int    `form:"size" validate:"min=1,max=50"`                                             // 查询参数：每页条数（默认20，最大50）
+	StartTime string `form:"startTime,omitempty"`                                                      // 查询参数：开始时间（ISO8601格式）
+	EndTime   string `form:"endTime,omitempty"`                                                        // 查询参数：结束时间（ISO8601格式）
+	Sentiment string `form:"sentiment,omitempty" validate:"omitempty,oneof=positive negative neutral"` // 查询参数：情感标签筛选
+}
+
+type GetInfluencerSentimentSummaryRequest struct {
+	Username  string `form:"username" path:"username"`                                  // 路径参数：大V用户名
+	TimeRange string `form:"timeRange,omitempty" validate:"omitempty,oneof=7d 30d 90d"` // 查询参数：时间范围（默认7天）
+}
+
+// ==================== 4. 关键词管理领域 ====================
+type SentimentKeyword struct {
+	Id        uint64  `json:"id"`        // 主键ID
+	Keyword   string  `json:"keyword"`   // 情感关键词（如bullish、crash）
+	Weight    float64 `json:"weight"`    // 情感权重（正数=正面，负数=负面）
+	Category  string  `json:"category"`  // 分类（如crypto/stock/tech）
+	Frequency int     `json:"frequency"` // 使用频率
+	CreatedAt string  `json:"createdAt"` // 添加时间（ISO8601格式）
+	UpdatedAt string  `json:"updatedAt"` // 更新时间（ISO8601格式）
+}
+
 type AddKeywordRequest struct {
 	Keyword  string  `json:"keyword" validate:"required,min=1,max=64"`  // 关键词（必填）
 	Weight   float64 `json:"weight" validate:"required,gte=-5,lte=5"`   // 权重（-5~5，必填）
@@ -14,11 +186,6 @@ type AddKeywordResponse struct {
 	Data SentimentKeyword `json:"data"` // 新增关键词详情
 }
 
-type BaseResponse struct {
-	Code    int    `json:"code"`    // 状态码：0=成功，非0=失败
-	Message string `json:"message"` // 提示信息
-}
-
 type GetKeywordsByCategoryRequest struct {
 	Category string `form:"category" path:"category"` // 路径参数：关键词分类
 }
@@ -26,14 +193,4 @@ type GetKeywordsByCategoryRequest struct {
 type KeywordListResponse struct {
 	BaseResponse
 	Data []SentimentKeyword `json:"data"` // 关键词列表
-}
-
-type SentimentKeyword struct {
-	Id        uint64  `json:"id"`        // 主键ID
-	Keyword   string  `json:"keyword"`   // 情感关键词（如bullish、crash）
-	Weight    float64 `json:"weight"`    // 情感权重（正数=正面，负数=负面）
-	Category  string  `json:"category"`  // 分类（如crypto/stock/tech）
-	Frequency int     `json:"frequency"` // 使用频率
-	CreatedAt string  `json:"createdAt"` // 添加时间（ISO8601格式）
-	UpdatedAt string  `json:"updatedAt"` // 更新时间（ISO8601格式）
 }
